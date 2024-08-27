@@ -1,6 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Mailjet.Client.Resources;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using WebApi.Models;
 
@@ -18,7 +21,7 @@ namespace WebApi.Services
         }
 
 
-        public string CreateToken(User user)
+        public string CreateToken(AppUser user)
         {
             var userClaims = new List<Claim>
             {
@@ -40,6 +43,88 @@ namespace WebApi.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var jwt = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(jwt);
+        }
+
+
+        private SigningCredentials GetSigningCredentials()
+        {
+            var key = Encoding.UTF8.GetBytes(_config["JWT:Key"]);
+            var secret = new SymmetricSecurityKey(key);
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
+
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        {
+            var jwtSettings = _config.GetSection("JWT");
+            var tokenOptions = new JwtSecurityToken(
+            issuer: jwtSettings["Issuer"],
+            //audience: jwtSettings["validAudience"],
+            claims: claims,
+            expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["ExpiresInDays"])),
+            signingCredentials: signingCredentials
+            );
+            return tokenOptions;
+        }
+
+
+        public string CreateTokenAsync(AppUser tokenUser)
+        {
+            var signingCredentials = GetSigningCredentials();
+            var userClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, tokenUser.Id),
+                new Claim(ClaimTypes.Email, tokenUser.Email),
+                new Claim(ClaimTypes.GivenName, tokenUser.FirstName),
+                new Claim(ClaimTypes.Surname, tokenUser.LastName)
+            };
+            //var claims = await GetClaims( tokenUser);
+            var tokenOptions = GenerateTokenOptions(signingCredentials, userClaims);
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var jwtSettings = _config.GetSection("JWT");
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                //ValidateAudience = true,
+                //ValidateIssuerSigningKey = true,
+                //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"))),
+                //ValidateLifetime = true,
+                //ValidIssuer = jwtSettings["validIssuer"],
+                //ValidAudience = jwtSettings["validAudience"]
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"])),
+                ValidIssuer = jwtSettings["Issuer"],
+                ValidateIssuer = true,
+                ValidateLifetime = true,
+                ValidateAudience = false,
+
+
+
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+            StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid token");
+            }
+            return principal;
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
 

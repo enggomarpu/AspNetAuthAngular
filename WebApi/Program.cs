@@ -28,7 +28,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddDbContext<IdentityContext>(opts => opts.UseSqlite(builder.Configuration.GetConnectionString("sqliteConnection")));
 builder.Services.AddDbContext<IdentityContext>(opts =>
- 	opts.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
+  	opts.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
 
 
 builder.Services.AddAutoMapper(typeof(Program));
@@ -36,7 +36,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<JWTService>();
 builder.Services.AddScoped<EmailService>();
 
-builder.Services.AddIdentityCore<User>(options =>
+builder.Services.AddIdentityCore<AppUser>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
 	options.Lockout.AllowedForNewUsers = true;
@@ -51,9 +51,12 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddRoles<IdentityRole>()
     .AddRoleManager<RoleManager<IdentityRole>>()
     .AddEntityFrameworkStores<IdentityContext>()
-    .AddSignInManager<SignInManager<User>>()
-    .AddUserManager<UserManager<User>>()
+    .AddSignInManager<SignInManager<AppUser>>()
+    .AddUserManager<UserManager<AppUser>>()
     .AddDefaultTokenProviders();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+   opt.TokenLifespan = TimeSpan.FromHours(2));
 
 builder.Services.ConfigureJWT(builder.Configuration);
 
