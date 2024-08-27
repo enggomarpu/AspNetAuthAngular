@@ -10,12 +10,12 @@ namespace WebApi.Helpers
         public MappingProfile()
         {
            
-            CreateMap<User, UserDto>();
-			CreateMap<User, RegisterDto>();
+            CreateMap<AppUser, UserDto>();
+			CreateMap<AppUser, RegisterDto>();
             
-            CreateMap<RegisterDto, User>().ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
+            CreateMap<RegisterDto, AppUser>().ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
-			CreateMap<UserDto, User>();
+			CreateMap<UserDto, AppUser>();
 
         }
     }

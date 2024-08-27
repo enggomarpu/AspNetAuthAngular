@@ -11,6 +11,7 @@ using WebApi.Middleware;
 using WebApi.Models;
 using WebApi.Services;
 using WebApi.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,11 +28,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddDbContext<IdentityContext>(opts => opts.UseSqlite(builder.Configuration.GetConnectionString("sqliteConnection")));
-builder.Services.AddDbContext<IdentityContext>(opts =>
-  	opts.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
+builder.Services.AddDbContext<IdentityContext>(opts => opts.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
 
 
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAuthentication();
 
 builder.Services.AddScoped<JWTService>();
 builder.Services.AddScoped<EmailService>();

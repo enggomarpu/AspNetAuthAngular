@@ -10,9 +10,13 @@ namespace WebApi.Extensions
 	{
 		public static void ConfigureJWT(this IServiceCollection services, IConfiguration config)
 		{
-			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-	.AddJwtBearer(options =>
-	{
+			services.AddAuthentication(options =>
+			{
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+			.AddJwtBearer(options =>
+		{
 		options.TokenValidationParameters = new TokenValidationParameters
 		{
 			ValidateIssuerSigningKey = true,

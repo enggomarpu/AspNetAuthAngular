@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
 using WebApi.DTOs.Account;
 using WebApi.Errors;
+using WebApi.Interfaces;
 using WebApi.Models;
 using WebApi.Services;
 
@@ -117,7 +119,7 @@ namespace WebApi.Controllers
 				var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
                 if (result.Succeeded) 
                 {
-					return Ok(true);
+					return Ok(new {success= true, message = "email confirmed successfully"});
 				}
 
                 return BadRequest(new ErrorDetails((int)HttpStatusCode.BadRequest, "Invalid token"));
@@ -144,7 +146,7 @@ namespace WebApi.Controllers
            var result =  await _userManager.CreateAsync(userToAdd, registerDto.Password);
 		   if (!result.Succeeded) return BadRequest(result.Errors);
 
-            userToAdd.TwoFactorEnabled = true;
+            //userToAdd.TwoFactorEnabled = true;
 			if (result.Succeeded) await _userManager.AddToRolesAsync(userToAdd, registerDto.Roles);
 
 			try
@@ -187,12 +189,26 @@ namespace WebApi.Controllers
                 {
                     return Ok(new { success = true, message = "Email has been sent to your email." });
                 }
-            
-
-
+          
             return BadRequest("Failed to send email. Please contact admin");
+        }
 
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] ChangePasswordDto model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return BadRequest(new ErrorDetails(400, "User does not exists"));
 
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(model.Token);
+            var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { success = true, message = "Password reset successfully" });
+            }
+
+            return BadRequest(new ErrorDetails(400, "Password reset does not happened succesffully."));
         }
 
         private UserDto CreateApplicationUserDto(AppUser user)
@@ -214,7 +230,7 @@ namespace WebApi.Controllers
             var body = EmailBody(user, url);
 
 
-            var emailSend = new EmailSendDto(user.Email, "Forgot username or password", body);
+            var emailSend = new EmailSendDto(user.Email, "Register User", body);
 
 			return await _emailService.SendEmailAsync(emailSend);
 
