@@ -114,7 +114,7 @@ namespace WebApi.Controllers
 		   if (!result.Succeeded) return BadRequest(result.Errors);
 
             userToAdd.TwoFactorEnabled = true;
-
+			if (result.Succeeded) await _userManager.AddToRolesAsync(userToAdd, registerDto.Roles);
 
 			try
             {
