@@ -1,0 +1,14 @@
+<div *ngIf="control" class="content-input">
+    <input
+      [placeholder]="placeholder"
+      [type]="type"
+      [attr.value]="value || null"
+      [attr.id]="id || null"
+      
+    />
+    <!-- <c-error-input
+      *ngIf="!isValid()"
+      [formContained]="control"
+      [controlName]="name"
+    ></c-error-input> -->
+  </div>

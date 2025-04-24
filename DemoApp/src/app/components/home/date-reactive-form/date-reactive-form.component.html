@@ -1,0 +1,58 @@
+<form [formGroup]="dateForm" (ngSubmit)="onSubmit()">
+    
+    <div class="input-group">
+        <div>
+            <label for="arrivalDate">Arrival Date</label>
+            <input 
+                type="text" 
+                class="form-control mb-3" 
+                placeholder="Datepicker" 
+                bsDatepicker 
+                [maxDate]="arrivalMaxDate"
+                #dp="bsDatepicker"
+                formControlName="arrivalDate"
+                [bsConfig]="bsConfig"
+                id="arrivalDate"
+                (blur)="validateDate()"
+            />
+            <div class="input-group-append">
+                <button class="btn btn-success" (click)="dp.toggle()" [attr.aria-expanded]="dp.isOpen" type="button">Date Picker</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="arrivalDateField.invalid && (arrivalDateField.dirty || arrivalDateField.touched)">
+        <div *ngIf="arrivalDateField.hasError('required')">date arrival is required</div>
+    </div> 
+
+
+    <div class="input-group">
+        <div>
+            <label for="departureDate">Departure Date</label>
+            <input 
+                type="text" 
+                class="form-control mb-3" 
+                placeholder="Datepicker" 
+                bsDatepicker 
+                [minDate]="minDate"
+                #dp1="bsDatepicker"
+                formControlName="departureDate"
+                [bsConfig]="bsConfig"
+                id="departureDate"
+                
+            />
+            <div class="input-group-append">
+                <button class="btn btn-success" (click)="dp1.toggle()" [attr.aria-expanded]="dp.isOpen" type="button">Date Picker</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="departureDateField.invalid && (departureDateField.dirty || departureDateField.touched)">
+        <div *ngIf="departureDateField.hasError('required')">date arrival is required</div>
+    </div> 
+
+
+
+
+
+    
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+  </form>

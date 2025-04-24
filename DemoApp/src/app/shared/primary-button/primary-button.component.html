@@ -1,0 +1,25 @@
+<p>primary-button works!</p>
+<button
+    [type]="type"
+    (click)="onClick()"
+    [disabled]="disabled"
+    [ngClass]="{
+        'btn-primary': !disabled,
+        'btn-disabled': disabled,
+        readonly: readonly
+    }"
+    [class]="class"
+>
+    <ng-container *ngIf="icon && iconPosition === 'left'">
+        <i [ngClass]="icon" class="mr-2"></i> 
+    </ng-container>
+
+        {{label}}
+
+    <ng-container *ngIf="icon && iconPosition === 'right'">
+        <i [ngClass]="icon" class="ml-2"></i> 
+    </ng-container>
+
+</button>
+
+

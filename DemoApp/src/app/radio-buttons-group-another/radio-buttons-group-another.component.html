@@ -1,0 +1,39 @@
+<p>radio-buttons-group-another works!</p>
+<form #form1="ngForm">
+    <div *ngFor="let section of gadQuestions">
+      <p>{{section.text}}</p>
+      <ng-container>
+      <div *ngFor="let question of section.questions">
+        <div id="radio-input-container">
+          <input 
+            type="radio"
+            [name]="section.id"
+            [value]="question.value"
+            [(ngModel)]="question.selected"
+            (ngModelChange)="chooseValue(section.id, question, question.value)"
+            [id]="question.value + section.id"
+            class="input-radio"
+            required
+           
+          />
+          <label class="radio-button" [for]="question.value + section.id">{{question.label}}</label>
+        
+         
+
+        
+        
+
+         
+          
+        </div>
+
+       
+      </div>
+      </ng-container>
+    </div>
+    </form>
+    
+    
+    
+    {{form1.dirty}}
+    

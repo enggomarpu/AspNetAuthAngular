@@ -1,0 +1,44 @@
+<form #roomAllocationPatientVisitorForm="ngForm">
+    <app-date-picker 
+      label="Arrival date" 
+      [(ngModel)]="data.occupantArrivalDate" 
+      name="occupantArrivalDate"
+      [tabIndex]="0" 
+      [required]="true"
+      [disabled]="true"
+      (dateChange)="arrivalDateChange($event)"
+      (onBlurChange)="arrivalBlur()"
+      (onBlurInput)="onBlurInputArrival()"
+    >
+    </app-date-picker>
+  
+    <app-date-picker 
+      label="Departure date" 
+      [(ngModel)]="data.occupantDepartureDate"
+      name="occupantDepartureDate" 
+      [tabIndex]="0" 
+      [required]="true"
+      [disabled]="true"
+      (dateChange)="departureDateChange($event)"
+      (onBlurChange)="departureBlur()"
+      (onBlurInput)="onBlurInputDeparture()"
+    >
+    </app-date-picker>
+    
+    <div *ngIf="!isDepartureGreaterThanArrival && data.occupantArrivalDate && data.occupantDepartureDate">
+      <div>Arrival date should be shorter than departure date</div>
+    </div>
+  
+    <button 
+      class="btn btn-primary save-btn" 
+      (click)="onSave()" 
+      [disabled]="!roomAllocationPatientVisitorForm.valid || !isDepartureGreaterThanArrival"
+    >
+      <span>Save</span>
+      <i class="fa-solid fa-floppy-disk" ></i>
+    </button>
+  
+  </form>
+  
+  
+  

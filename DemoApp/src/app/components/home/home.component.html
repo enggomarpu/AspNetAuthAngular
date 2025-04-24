@@ -1,1 +1,342 @@
-<p>home works!</p>
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <!-- Name Input -->
+  <div>
+    <label for="name">Name:</label>
+    <input id="name" name="name" type="text" ngModel required #name="ngModel" />
+    <!-- Validation Message -->
+    <div *ngIf="name.invalid && name.touched">
+      Name is required.
+    </div>
+  </div>
+
+  <!-- Email Input -->
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" name="email" type="email" ngModel required #email="ngModel" />
+    <!-- Validation Message -->
+    <div *ngIf="email.invalid && email.touched">
+      Valid email is required.
+    </div>
+  </div>
+
+ 
+
+
+  <div>
+    <input type="text" name="PhoneNumber" mask="(000) 0000-00000" required #phone="ngModel"
+      [(ngModel)]="maskedMobileNumber" [showMaskTyped]="false" (ngModelChange)="onMaskedInputChange($event)" />
+
+    <div *ngIf="phone.invalid && form.submitted && phone.pristine">
+      phone is required
+    </div>
+
+    <!-- <div *ngIf=" (phone.dirty) && !isValidMobileNumber">
+        invalid format
+      </div> -->
+
+    <div *ngIf=" (phone.dirty) && phone.invalid">
+      invalid format
+    </div>
+
+    <!-- <div *ngIf=" (phone.dirty || phone.touched) && !isValidMobileNumber">
+        invalid format
+      </div> -->
+
+  </div>
+
+  <div>{{form.pristine}}</div>
+
+  <!-- Submit Button -->
+  <button type="submit">
+    Submit
+  </button>
+
+  <!-- <button type="submit" [disabled]="form.invalid">
+      Submit
+    </button> -->
+
+
+
+</form>
+
+
+<input type="text" ngbDatepicker #d="ngbDatepicker" />
+<button (click)="d.toggle()">Toggle</button>
+
+<div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+  <label for="mobileNumber">Mobile Number</label>
+  <input type="text" id="mobileNumber" [(ngModel)]="mobileNumberValue" name="mobileNumber" #mobile="ngModel"
+    placeholder="+447911123456" (ngModelChange)="onPhoneNumberChange($event)" />
+
+
+  <div *ngIf="mobile.invalid && mobile.pristine">
+    phone is required
+  </div>
+
+  <div *ngIf="(mobile.dirty) && !isValidMobileNumber">
+    invalid format
+  </div>
+</div>
+
+
+<div class="input-group">
+  <label for="arrivalDate">Arrival Date</label>
+  <input 
+    type="text"
+    class="form-control"
+    #dp="bsDatepicker"
+    bsDatepicker
+    required
+    id="arrivalDate"
+    name="arrivalDate"
+    [(ngModel)]="arrivalDate"
+    [bsConfig]="bsConfig"
+    (change)="changeArrival($event)"
+    (bsValueChange)="onArrivalDateChange($event)"
+    (blur)="blurArrival($event)"
+    required
+  />
+  <div class="input-group-append">
+    <button class="btn btn-success" (click)="dp.toggle()" [attr.aria-expanded]="dp.isOpen" type="button">Date Picker</button>
+  </div>
+</div>
+
+<!-- <div *ngIf="arrivalDateField.invalid && (arrivalDateField.dirty || arrivalDateField.touched)" class="absolute bottom-5px z-[0] text-danger text-error">
+  <div *ngIf="arrivalDateField.errors && arrivalDateField.errors['required']">This is required field</div>
+</div> -->
+
+
+
+
+<div class="input-group">
+  <label for="departureDate">Departure Date</label>
+  <input 
+    type="text"
+    class="form-control"
+    #dp1="bsDatepicker"
+    bsDatepicker
+    id="departureDate"
+    name="departureDate"
+    [(ngModel)]="departureDate" 
+    [bsConfig]="bsConfig"
+    (bsValueChange)="onDepartureDateChange($event)"
+    required
+  />
+  <div class="input-group-append">
+    <button class="btn btn-success" (click)="dp1.toggle()" [attr.aria-expanded]="dp.isOpen" type="button">Date Picker</button>
+  </div>
+</div>
+
+
+
+
+<div class="col-xs-12 col-12 col-md-4 form-group mb-3">
+  <input type="text" class="form-control" #dp="bsDatepicker" bsDatepicker [(bsValue)]="DateOfBirthField"
+    [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', showClearButton: true }" (bsValueChange)="onValueChange($event)" />
+</div>
+
+<div class="col-xs-12 col-12 col-md-3 form-group mb-3">
+  <button class="btn btn-success" (click)="dp.toggle()" [attr.aria-expanded]="dp.isOpen" type="button">Date
+    Picker</button>
+</div>
+
+
+<button (click)="checkulid()">Check UIID</button>
+<a href="https://cdn.filestackcontent.com/iTvDMPahSVS1nUIn5qMg" download="filename.pdf">Download file</a>
+<button (click)="downloadPdf()">download file</button>
+<!-- 
+<app-primary-button 
+    (onButtonClick)="nextStepTwo()"
+    [label]="'Next'"
+    [type]="'button'"
+    [class]="'bg-primary text-black py-2 px-6 hover:bg-primary-dark flex items-center'"
+    [iconPosition]="'right'"
+    [icon]="'fa-solid fa-chevron-right'"
+    tabindex="20"
+    [disabled]="false"
+   
+>
+</app-primary-button> -->
+<h4>Number input to allow only positive integers without "-" and "e"</h4>
+<input 
+  type="number" 
+  min="0" 
+  name="positiveNumberInput" 
+  [(ngModel)]="positiveNumber" 
+  (input)="validateInput($event)" 
+  required
+/>
+
+<div>
+  <input 
+    type="radio"
+    name="group1"
+    id="1"
+  />
+  <label for="1">Yes</label>
+
+  <input 
+    type="radio"
+    name="group1"
+    id="2"
+  />
+  
+  <label for="2">No</label>
+  <input 
+    type="text" 
+  />
+</div>
+
+<div>
+  <input 
+    type="radio"
+    name="group2"
+    id="3"
+  />
+  <label for="3">Yes</label>
+
+  <input 
+    name="group2"
+    type="radio"
+    id="4"
+  />
+  <label for="4">No</label>
+  <input 
+    type="text" 
+  />
+</div>
+
+
+<h2>Radio group buttons</h2>
+<app-radio-buttons-group></app-radio-buttons-group>
+
+
+<!-- <h2>Reactive forms --------------- </h2>
+<app-date-reactive-form></app-date-reactive-form> -->
+
+
+
+
+<!-- <form #form1="ngForm">
+  <div *ngFor="let question of questions; let i = index">
+    <p>Q{{ i + 1 }} – {{ question.text }}</p>
+    
+   
+      <div>
+        <input type="radio" [value]="1" [name]="question.id" [(ngModel)]="data[question.id]" /> One
+        <input type="radio" [value]="2" [name]="question.id" [(ngModel)]="data[question.id]" /> Two
+        <input type="radio" [value]="3" [name]="question.id" [(ngModel)]="data[question.id]" /> Three
+      </div>
+
+      {{question.id}}
+      
+    
+  </div>
+</form> -->
+
+<!-- 
+<form #form1="ngForm">
+  <div *ngFor="let question of questions; trackBy: trackByQuestionId; let i = index">
+    <p>Q{{ i + 1 }} – {{ question.text }}</p>
+    <ng-container *ngFor="let item of items; let i = index">
+      <div role="radiogroup" [attr.aria-labelledby]="'question-' + i">
+      <label class="flex items-center align-middle">
+        <input 
+          class="custom-radio"
+          type="radio"
+          [value]="item.value"
+          [name]="question.id" 
+          [checked]="data[question.id] === item.value"
+          (change)="updateSelection(question.id, item.value)" 
+          required
+        />
+        <span class="ml-2 text-p text-color-dark">{{ item.label }}</span>
+      </label>
+    </div>
+    </ng-container>
+  </div>
+</form> -->
+
+
+
+<!-- <form #form1="ngForm">
+  <div *ngFor="let question of questions; trackBy: trackByQuestionId; let i = index">
+    <p>Q{{ i + 1 }} – {{ question.text }}</p>
+    <div role="radiogroup" [attr.aria-labelledby]="'question-' + i">
+      <label>
+        <input 
+          type="radio" 
+          [value]="1" 
+          [name]="question.id" 
+          [checked]="data[question.id] === 1"
+          (change)="updateSelection(question.id, 1)" 
+        /> One
+      </label>
+      <label>
+        <input 
+          type="radio" 
+          [value]="2" 
+          [name]="question.id" 
+          [checked]="data[question.id] === 2"
+          (change)="updateSelection(question.id, 2)" /> 
+          Two
+      </label>
+      <label>
+        <input 
+          type="radio" 
+          [value]="3" [name]="question.id" 
+          [checked]="data[question.id] === 3"
+          (change)="updateSelection(question.id, 3)" 
+          /> 
+        Three
+      </label>
+    </div>
+    <span>Selected: {{data[question.id]}}</span>
+  </div>
+</form> -->
+
+<!-- <form #form1="ngForm" novalidate>
+  <div *ngFor="let question of questions; trackBy: trackById let i = index">
+    <p>Q{{ i + 1 }} – {{ question.text }}</p>
+      <ng-container>
+        <div
+          role="radiogroup"
+          
+        >
+       
+          <input type="radio"  [name]="'group-' + question.id" [value]="1" [id]="question.id + '-option-1'" [(ngModel)]="data[question.id]" required     />
+          <label  [for]="question.id + '-option-1'">One</label>
+          
+          <input type="radio" [name]="'group-' + question.id" [value]="2" [id]="question.id + '-option-2'" [(ngModel)]="data[question.id]"  required/> 
+          <label  [for]="question.id + '-option-2'">Two</label>
+          
+          <input type="radio" [name]="'group-' + question.id" [value]="3" [id]="question.id + '-option-3'" [(ngModel)]="data[question.id]" required /> 
+          <label  [for]="question.id + '-option-3'">Three</label>
+        
+        </div>
+      </ng-container>
+  </div>
+</form> -->
+
+
+
+
+<!-- <form>
+  <input type="radio" value="1" name="radio" [(ngModel)]="data2.selected" /> One
+  <input type="radio" value="2" name="radio" [(ngModel)]="data2.selected" /> Two
+  <input type="radio" value="3" name="radio" [(ngModel)]="data2.selected" /> Three
+
+
+
+  <div>
+    <input type="radio" value="1" name="radio1" [(ngModel)]="data2.selected" /> One
+    <input type="radio" value="2" name="radio1" [(ngModel)]="data2.selected" /> Two
+    <input type="radio" value="3" name="radio1" [(ngModel)]="data2.selected" /> Three
+  </div>
+
+  <br />
+<br />
+Selected: {{ data2.selected }}
+Selected2: {{ data2.selected2 }}
+
+</form> -->

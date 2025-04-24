@@ -1,0 +1,70 @@
+<p>radio-buttons-group works!</p>
+<form #form1="ngForm">
+    <div *ngFor="let section of medications">
+      <p>{{section.title}}</p>
+      <ng-container>
+      <div *ngFor="let question of section.questions">
+        <p>{{question.text}}</p>
+        <div id="radio-input-container">
+
+          <input 
+            type="radio"
+            [name]="question.id"
+            [value]="true"
+            [(ngModel)]="question.answer"
+            (ngModelChange)="chooseYesNo(section.id, question, true)"
+            [id]="question.id + 'yes'"
+            tabindex="0"
+            class="input-radio"
+            required
+           
+          />
+          <label class="radio-button" [for]="question.id + 'yes'">Yes</label>
+        
+          <input 
+            type="radio"
+            [name]="question.id"
+            [id]="question.id + 'no'"
+            [value]="false"
+            tabindex="0"
+            [(ngModel)]="question.answer"
+            (ngModelChange)="chooseYesNo(section.id, question, false)"
+            class="input-radio"
+            required
+           
+          />
+          
+          <label class="radio-button" [for]="question.id + 'no'">No</label>
+
+          <input 
+            type="text" 
+            [name]="question.id + 'comment'"
+            #inputText="ngModel"
+            [readonly]="!question.answer"
+            [tabIndex]="question.answer ? '0' : '-1'"
+            [(ngModel)]="data.inpuText"
+            *ngIf="question.answer"
+            required
+      
+          />
+          
+        </div>
+
+        {{question.answer}}
+
+
+        <!-- <div *ngIf="inputText.invalid && (inputText.dirty || inputText.touched)">
+          <div>This field is required</div>
+          {{inputText.dirty}}
+        </div> -->
+
+
+      </div>
+      </ng-container>
+    </div>
+    </form>
+    
+    
+    
+    {{form1.dirty}}
+    

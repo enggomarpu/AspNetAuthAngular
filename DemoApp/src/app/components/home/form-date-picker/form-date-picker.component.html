@@ -1,0 +1,43 @@
+<div class="form-group">
+    <label [for]="getId()" class="form-label">
+      {{ label }}
+      <span *ngIf="!required">(Optional)</span>
+    </label>
+    <div class="input-group">
+      <input bsDatepicker
+           [bsConfig]="bsConfig"
+           [id]="getId()"
+           [name]="name"
+           [(ngModel)]="displayValue"
+           (ngModelChange)="handleValueChange($event)"
+           [readonly]="readonly"
+           [disabled]="disabled"
+           [required]="required"
+           #control="ngModel"
+           [tabIndex]="tabIndex"
+           (blur)="onBlur()"
+           (onHidden)="onHidden()"
+           [ngClass]="{
+              'border-danger': isInvalid,
+              '': !isInvalid,
+              'datepicker-readonly': readonly,
+              'datepicker-disabled': readonly || disabled
+             }"
+           class="form-control" />
+           <button 
+        type="button"
+        [disabled]="disabled"
+        class="btn btn-text-primary"
+        [ngClass]="{'cursor-not-allowed': readonly || disabled}"
+        [tabIndex]="-1"
+        (keydown)="onInputKeydown($event)"
+        (click)="toggleDatePicker()"
+      >
+        <i class="fa fa-calendar"></i>
+      </button>
+    </div>
+    <label  [for]="getId()" *ngIf="isInvalid" class="text-error">
+      <span *ngIf="control.errors?.['required']">{{ validationMessage }}</span> <i class="fa-solid fa-circle-exclamation"></i>
+    </label>
+  </div>
+  
